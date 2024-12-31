@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
+    <title>Todo main app</title>
+  </head>
+  <body>
+    <script>
+        if ( window.history.replaceState ) {
+            window.history.replaceState( null, null, window.location.href );
+        }
+    </script>
+    <main class="container">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="messages">
+                <article>
+                    {{message}}
+                    <a role="button" onclick="this.parentElement.style.display= 'none'">X</a>
+                </article>
+            </div>
+            {% endfor %}
+        {% endif%}
+        <section class="add_todo">
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="text" name="name"  minlength="3" id="name" placeholder="Enter todo name" required>
+                <button type="submit">Add todo</button>
+            </form>
+        </section>
+        <section class="todo_list">
+            <ul>
+                {% for todo in todos%}
+                <li>
+                    <h4>
+                        {% if todo.done %}
+                            <strike>{{todo.title}}</strike>
+                        {% else %}
+                            {{todo.title}}
+                        {% endif %}
+                    </h4>
+                    <div class="actions">
+                        <a href="{% url 'main:done' todo.id %}">Done</a>
+                        <a href="{% url 'main:delete' todo.id %}">Delete</a>
+                    </div> 
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+  </body>
+</html>
